@@ -1,5 +1,19 @@
 #!/bin/bash
 
+#########################################################
+# check_ice_count
+# 
+# A Nagios plugin that will report the number of users on 
+# various Icecast mount points.
+# 
+# Example output...
+# ./check_ice_count -H stream.domain.com -p 8443 -s 
+# | '/128'=1;;;; '/32'=2;;;; '/aac'=0;;;; 
+#
+# This needs a bit more work to report errors, etc.
+# 
+# Tim Pozar 
+#########################################################
 SSL=0
 PARAMS=""
 while (( "$#" )); do
