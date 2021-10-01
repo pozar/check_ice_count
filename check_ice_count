@@ -1,0 +1,61 @@
+#!/bin/bash
+
+SSL=0
+PARAMS=""
+while (( "$#" )); do
+  case "$1" in
+    -s|--SSL)
+      SSL=1
+      shift
+      ;;
+    -H|--host)
+      if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+        HOST=$2
+        shift 2
+      else
+        echo "Error: Argument for $1 is missing" >&2
+        exit 1
+      fi
+      ;;
+    -p|--port)
+      if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+        PORT=$2
+        shift 2
+      else
+        echo "Error: Argument for $1 is missing" >&2
+        exit 1
+      fi
+      ;;
+    -*|--*=) # unsupported flags
+      echo "Error: Unsupported flag $1" >&2
+      exit 1
+      ;;
+    *) # preserve positional arguments
+      PARAMS="$PARAMS $1"
+      shift
+      ;;
+  esac
+done
+# set positional arguments in their proper place
+eval set -- "$PARAMS"
+
+if [[ SSL ]]; then
+	HTTP='https://'
+else 
+	HTTP='http://'
+fi
+
+echo -n " | "
+for OUTPUT in $(elinks -dump $HTTP$HOST:$PORT | grep 'Mount Point\|current' | sed 's/^ *//g' | sed 's/Mount Point //g' | sed 's/.*: //g'); do 
+	if [[ $OUTPUT =~ \/.* ]]; then
+		# The mount name...
+  		echo -n "'$OUTPUT'"
+  		echo -n "="
+	else
+		# The current number of listners
+  		echo -n "$OUTPUT"
+  		echo -n ";;;; "
+	fi
+done
+echo
+
