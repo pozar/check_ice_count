@@ -3,8 +3,13 @@
 #########################################################
 # check_ice_count
 # 
-# A Nagios plugin that will report the number of users on 
+# A very basic Nagios plugin that will scrape the Icecast 
+# Server web page to report the number of users on the
 # various Icecast mount points.
+#
+# You can use this for Icecast versions before 2.4.0.  
+# From 2.4.0 there is a better stats page at:
+# /server/status-json.xsl
 # 
 # Example output...
 # ./check_ice_count -H stream.domain.com -p 8443 -s 
